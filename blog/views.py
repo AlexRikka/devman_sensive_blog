@@ -8,6 +8,8 @@ from blog.models import Comment
 from blog.models import Post
 from sensive_blog.settings import COMPANY_COORDINATES
 
+DEFAULT_IMAGE_URL = ('static/img/banner/blog.png')
+
 
 def serialize_post(post):
     return {
@@ -15,7 +17,7 @@ def serialize_post(post):
         "text": post.text,
         "author": post.author.username,
         "comments_amount": Comment.objects.filter(post=post).count(),
-        "image_url": post.image.url if post.image else None,
+        "image_url": post.image.url if post.image else DEFAULT_IMAGE_URL,
         "published_at": post.published_at,
         "slug": post.slug,
     }
