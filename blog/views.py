@@ -58,7 +58,7 @@ def post_detail(request, slug):
         "author": post.author.username,
         "comments": serialized_comments,
         'likes_amount': post.likes.count(),
-        "image_url": post.image.url if post.image else None,
+        "image_url": post.image.url if post.image else DEFAULT_IMAGE_URL,
         "published_at": post.published_at,
         "slug": post.slug,
     }
