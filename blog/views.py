@@ -8,8 +8,6 @@ from blog.models import Comment
 from blog.models import Post
 from sensive_blog.settings import COMPANY_COORDINATES
 
-DEFAULT_IMAGE_URL = ('static/img/banner/blog.png')
-
 
 def serialize_post(post):
     return {
@@ -17,7 +15,7 @@ def serialize_post(post):
         "text": post.text,
         "author": post.author.username,
         "comments_amount": Comment.objects.filter(post=post).count(),
-        "image_url": post.image.url if post.image else DEFAULT_IMAGE_URL,
+        "image_url": post.image.url if post.image else post.image,
         "published_at": post.published_at,
         "slug": post.slug,
     }
@@ -25,10 +23,12 @@ def serialize_post(post):
 
 def index(request):
     """
-    Вьюхи не оптимизированы, потому что в последней задаче модуля Django ORM нужно их оптимизировать как раз на примере этого сайта.
+    Вьюхи не оптимизированы, потому что в последней задаче модуля Django ORM 
+    нужно их оптимизировать как раз на примере этого сайта.
     """
     all_posts = Post.objects.prefetch_related('author')
-    popular_posts = all_posts.annotate(likes_count=Count('likes')).order_by('-likes_count')[:3]
+    popular_posts = all_posts.annotate(
+        likes_count=Count('likes')).order_by('-likes_count')[:3]
     fresh_posts = all_posts.order_by('-published_at')[:5]
 
     context = {
@@ -40,7 +40,8 @@ def index(request):
 
 def post_detail(request, slug):
     """
-    Вьюхи не оптимизированы, потому что в последней задаче модуля Django ORM нужно их оптимизировать как раз на примере этого сайта.
+    Вьюхи не оптимизированы, потому что в последней задаче модуля Django ORM 
+    нужно их оптимизировать как раз на примере этого сайта.
     """
     post = get_object_or_404(Post, slug=slug)
     comments = Comment.objects.filter(post=post)
@@ -58,7 +59,7 @@ def post_detail(request, slug):
         "author": post.author.username,
         "comments": serialized_comments,
         'likes_amount': post.likes.count(),
-        "image_url": post.image.url if post.image else DEFAULT_IMAGE_URL,
+        "image_url": post.image.url if post.image else post.image,
         "published_at": post.published_at,
         "slug": post.slug,
     }
@@ -71,7 +72,8 @@ def post_detail(request, slug):
 
 def contact(request):
     """
-    Вьюхи не оптимизированы, потому что в последней задаче модуля Django ORM нужно их оптимизировать как раз на примере этого сайта.
+    Вьюхи не оптимизированы, потому что в последней задаче модуля Django ORM 
+    нужно их оптимизировать как раз на примере этого сайта.
     """
     # позже здесь будет код для статистики заходов на эту страницу
     # и для записи фидбека
